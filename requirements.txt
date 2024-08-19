@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+scikit-learn
+pandas
+alibi-detect
+joblib
+jupyterlab
+tensorflow_data_validation
