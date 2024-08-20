@@ -50,4 +50,5 @@ async def predict_model(input_data: InputBody):
         "input_data": input_data.model_dump(),
         "prediction": prediction_result,
         "real_income": real_income,
+        "tag": input_data.tag,
     }

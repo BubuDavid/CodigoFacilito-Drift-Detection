@@ -35,6 +35,7 @@ for index, row in data.iterrows():
         "hours_per_week": int(row["hours-per-week"]),
         "native_country": row["country"],
         "income": 40000 if row["income"] == "<=50K" else 60000,
+        "tag": "test_no_drift"
     }
 
     # Send the POST request

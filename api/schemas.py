@@ -130,6 +130,7 @@ class NativeCountry(str, Enum):
 
 
 class InputBody(BaseModel):
+    tag: str = Field("Basic", description="Tag for the input data")
     age: int = Field(..., gt=0, description="Age of the person")
     workclass: Workclass = Field(..., description="Workclass of the person")
     fnlwgt: int = Field(..., gt=0, description="Final weight")

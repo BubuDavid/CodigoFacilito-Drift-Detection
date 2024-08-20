@@ -6,3 +6,5 @@ alibi-detect
 jupyterlab
 python-logstash
 alibi-detect[torch]
+tensorflow
+tensorflow-data-validation
