@@ -1,68 +1,45 @@
-import numpy as np
-from scipy.stats import multivariate_normal
+import pandas as pd
+import requests
 
+# Load the CSV file
+data = None
+try:
+    data = pd.read_csv("client/test_data.csv")
+except FileNotFoundError:
+    data = pd.read_csv("test_data.csv")
 
-def true_model(X, slope=-1):
-    z = slope * X[:, 0]
-    idx = np.argwhere(X[:, 1] > z)
-    y = np.zeros(X.shape[0])
-    y[idx] = 1
-    return y
+if data is None:
+    raise FileNotFoundError("File not found")
 
+# Define the API endpoint
+url = "http://localhost:8080/predict"  # Adjust the URL if needed
 
-true_slope = -1
+# Iterate over each row in the dataframe and send a POST request
+for index, row in data.iterrows():
+    # Prepare the payload for the POST request
+    for key, value in row.items():
+        row[key] = str(value).strip()
+    payload = {
+        "age": int(row["age"]),
+        "workclass": row["workclass"],
+        "fnlwgt": int(row["fnlwgt"]),
+        "education": row["education"],
+        "education_num": int(row["education-num"]),
+        "marital_status": row["marital-status"],
+        "occupation": row["occupation"],
+        "relationship": row["relationship"],
+        "race": row["race"],
+        "sex": row["sex"],
+        "capital_gain": int(row["capital-gain"]),
+        "capital_loss": int(row["capital-loss"]),
+        "hours_per_week": int(row["hours-per-week"]),
+        "native_country": row["country"],
+        "income": 40000 if row["income"] == "<=50K" else 60000,
+    }
 
-# Reference distribution
-sigma = 0.8
-phi1 = 0.5
-phi2 = 0.5
-ref_norm_0 = multivariate_normal([-1, -1], np.eye(2) * sigma**2)  # type: ignore
-ref_norm_1 = multivariate_normal([1, 1], np.eye(2) * sigma**2)  # type: ignore
+    # Send the POST request
+    response = requests.post(url, json=payload)
 
-# Reference data (to initialise the detectors)
-N_ref = 240
-X_0 = ref_norm_0.rvs(size=int(N_ref * phi1), random_state=1)
-X_1 = ref_norm_1.rvs(size=int(N_ref * phi2), random_state=1)
-X_ref = np.vstack([X_0, X_1])
-y_ref = true_model(X_ref, true_slope)
-
-# Training data (to train the classifer)
-N_train = 240
-X_0 = ref_norm_0.rvs(size=int(N_train * phi1), random_state=0)
-X_1 = ref_norm_1.rvs(size=int(N_train * phi2), random_state=0)
-X_train = np.vstack([X_0, X_1])
-y_train = true_model(X_train, true_slope)
-
-# Test No Drift
-N_test = 120
-X_0 = ref_norm_0.rvs(size=int(N_test * phi1), random_state=2)
-X_1 = ref_norm_1.rvs(size=int(N_test * phi2), random_state=2)
-X_test = np.vstack([X_0, X_1])
-
-# Send data to the server to predict, the predictions are 1 by 1
-import requests as req
-
-url = "http://localhost:8080/predict"
-predictions = []
-for i in range(N_test):
-    x1, x2 = X_test[i]
-    data = {"x1": x1, "x2": x2, "tag": "test_no_drift"}
-    response = req.post(url, json=data)
+    # Print the response from the server
     json_response = response.json()
-    prediction = json_response["prediction"]
-    predictions.append(prediction)
-
-# Test Drift 'Covariate Shift'
-shift_norm_0 = multivariate_normal([2, -4], np.eye(2) * sigma**2)  # type: ignore
-X_0 = shift_norm_0.rvs(size=int(N_test * phi1), random_state=2)
-X_1 = ref_norm_1.rvs(size=int(N_test * phi2), random_state=2)
-X_test = np.vstack([X_0, X_1])
-
-# Check for drift in covariates
-predictions = []
-for i in range(N_test):
-    x1, x2 = X_test[i]
-    data = {"x1": x1, "x2": x2, "tag": "test_drift"}
-    response = req.post(url, json=data)
-    prediction = response.json()["prediction"]
-    predictions.append(prediction)
+    print(f"Prediction for row {index}: {json_response['prediction']}")
