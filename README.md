@@ -10,8 +10,6 @@ Cada ejemplo está en una rama diferente, para ver los ejemplos solo cambia de r
 
 - 00: Drift Detection simple.
 - 01: Usando TFDV para observar variaciones en datos de entrada.
-- 02: Usando Alibi Detect para detectar cambios en la distribución de los datos de manera sencilla, con datos de ejemplo de Adult Census.
-- 03: Usando Alibi Detect para detectar
 
 ## Referencias
 
