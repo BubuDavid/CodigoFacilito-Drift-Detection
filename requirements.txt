@@ -3,6 +3,7 @@ uvicorn
 scikit-learn
 pandas
 alibi-detect
+alibi
 jupyterlab
 python-logstash
 alibi-detect[torch]
