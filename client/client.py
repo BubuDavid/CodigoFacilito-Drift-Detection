@@ -52,7 +52,7 @@ for i in range(N_test):
     prediction = json_response["prediction"]
     predictions.append(prediction)
 
-# Test Drift
+# Test Drift 'Covariate Shift'
 shift_norm_0 = multivariate_normal([2, -4], np.eye(2) * sigma**2)  # type: ignore
 X_0 = shift_norm_0.rvs(size=int(N_test * phi1), random_state=2)
 X_1 = ref_norm_1.rvs(size=int(N_test * phi2), random_state=2)
