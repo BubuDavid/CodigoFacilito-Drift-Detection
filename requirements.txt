@@ -4,3 +4,5 @@ scikit-learn
 pandas
 alibi-detect
 jupyterlab
+python-logstash
+alibi-detect[torch]
