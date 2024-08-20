@@ -6,8 +6,6 @@ Este es el repositorio de la clase de detección de drift en modelos de ML despl
 Cada ejemplo está en una rama diferente, para ver los ejemplos solo cambia de rama en el repositorio. Los ejemplos que tenemos son:
     - 00: Drift Detection simple.
     - 01: Usando TFDV para observar variaciones en datos de entrada.
-    - 02: Usando Alibi Detect para detectar cambios en la distribución de los datos de manera sencilla, con datos de ejemplo de Adult Census.
-    - 03: Usando Alibi Detect para detectar 
  
 ## Referencias
 - [Alibi Detect](https://docs.seldon.io/projects/alibi-detect/en/stable/)
